@@ -157,12 +157,23 @@
                                     });
                                 }
                             }else if (item.key && item.filter){
-                                r.push({
-                                    fieldType:'string',
-                                    fieldOperator:'contains',
-                                    fieldValue: item.filter,
-                                    field: capitalize(item.key)
-                                });
+                                if(item.filter.indexOf("eq ") === 0)
+                                {
+                                    r.push({
+                                        fieldType:'string',
+                                        fieldOperator:'eq',
+                                        fieldValue: item.filter.substring(3,item.filter.length),
+                                        field: capitalize(item.key)
+                                    });
+                                }
+                                else {
+                                    r.push({
+                                        fieldType: 'string',
+                                        fieldOperator: 'contains',
+                                        fieldValue: item.filter,
+                                        field: capitalize(item.key)
+                                    });
+                                }
                             }
 
                             return r;
@@ -189,12 +200,23 @@
                                     });
                                 }
                             }else if (item.key && item.sortable){
-                                r.push({
-                                    fieldType:'string',
-                                    fieldOperator:'contains',
-                                    fieldValue: filter,
-                                    field: capitalize(item.key)
-                                });
+                                if(filter.indexOf("eq ") === 0)
+                                {
+                                    r.push({
+                                        fieldType:'string',
+                                        fieldOperator:'eq',
+                                        fieldValue: filter.substring(3,filter.length),
+                                        field: capitalize(item.key)
+                                    });
+                                }
+                                else {
+                                    r.push({
+                                        fieldType: 'string',
+                                        fieldOperator: 'contains',
+                                        fieldValue: filter,
+                                        field: capitalize(item.key)
+                                    });
+                                }
                             }
                             return r;
                         }, []);
