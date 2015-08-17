@@ -2192,7 +2192,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     $scope._model.refresh.cancel();
                     $scope.$grid.refresh.cancel();
                     $scope._model.refresh = _.debounce(refresh, 1000);
-                    $scope.$grid.refresh  = _.debounce(resetRefresh, 1000);
+                    $scope.$grid.refresh  = _.debounce(refresh, 1000);
                     refresh();
                     });
                 };
@@ -2205,11 +2205,11 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     $scope._model.waiting = waiting;
                 };
 
-              /*  this.refresh = function (force){
+                this.refresh = function (force){
                     if ($scope._model.items || force){
                         resetRefresh();
                     }
-                }; */
+                };
 
                 if($attrs.query !== undefined){
                     $attrs.$observe('query', function (val, old){
