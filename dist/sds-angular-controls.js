@@ -2074,9 +2074,9 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     waiting: false
                 };
                 $scope.$grid = {
-                    refresh: _.debounce(refresh, 100),
-                    resetRefresh: _.debounce(resetRefresh, 100),
-                    items: function (){ return $scope._model.filteredItems; }
+                    refresh: _.debounce(resetRefresh, 100),
+                    items: function (){ return $scope._model.filteredItems; },
+                    noResetRefreshFlag: false
                 };
 
 
@@ -2140,9 +2140,14 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                 }
 
                 function resetRefresh(){
-                    $scope._model.currentPage = 1;
-                    if($scope._model.isApi) {
-                        $scope._model.filteredItems = null;
+                    if ($scope.$grid.noResetRefreshFlag) {
+                        $scope.$grid.noResetRefreshFlag = false;
+                    }
+                    else {
+                        $scope._model.currentPage = 1;
+                        if ($scope._model.isApi) {
+                            $scope._model.filteredItems = null;
+                        }
                     }
                     refresh();
                 }
@@ -2192,7 +2197,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     $scope._model.refresh.cancel();
                     $scope.$grid.refresh.cancel();
                     $scope._model.refresh = _.debounce(refresh, 1000);
-                    $scope.$grid.refresh  = _.debounce(refresh, 1000);
+                    $scope.$grid.refresh  = _.debounce(resetRefresh, 1000);
                     refresh();
                     });
                 };
