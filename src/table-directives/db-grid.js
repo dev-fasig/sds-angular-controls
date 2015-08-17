@@ -14,8 +14,6 @@
      * @param {string}     filter    - One of the options 'none', 'simple' or 'advanced'. Defaults to 'advanced'. Bound once.
      * @param {int}        pageSize  - The page size, defaults to 25. Bound once.
      * @param {expression} for       - Required. Either 'item in items' or (when used with a custom data source) just 'item'
-     *
-     * adding a refreshReset
      */
     function dbGrid ($filter, $timeout, $q, $log) {
         return {
@@ -62,7 +60,8 @@
                     waiting: false
                 };
                 $scope.$grid = {
-                    refresh: _.debounce(resetRefresh, 100),
+                    refresh: _.debounce(refresh, 100),
+                    resetRefresh: _.debounce(resetRefresh, 100),
                     items: function (){ return $scope._model.filteredItems; }
                 };
 
@@ -192,11 +191,11 @@
                     $scope._model.waiting = waiting;
                 };
 
-                this.refresh = function (force){
+              /*  this.refresh = function (force){
                     if ($scope._model.items || force){
                         resetRefresh();
                     }
-                };
+                }; */
 
                 if($attrs.query !== undefined){
                     $attrs.$observe('query', function (val, old){
