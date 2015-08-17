@@ -14,6 +14,8 @@
      * @param {string}     filter    - One of the options 'none', 'simple' or 'advanced'. Defaults to 'advanced'. Bound once.
      * @param {int}        pageSize  - The page size, defaults to 25. Bound once.
      * @param {expression} for       - Required. Either 'item in items' or (when used with a custom data source) just 'item'
+     *
+     * adding a refreshReset
      */
     function dbGrid ($filter, $timeout, $q, $log) {
         return {
