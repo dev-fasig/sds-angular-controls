@@ -71,7 +71,12 @@
                 this.rowName = loop[0];
                 if (loop[2]) {
                     $scope.$watchCollection(loop.slice(2).join(' '), function (items, old) {
-                        $scope._model.currentPage = 1;
+                        if ($scope.$grid.noResetRefreshFlag) {
+                            $scope.$grid.noResetRefreshFlag = false;
+                        }
+                        else {
+                            $scope._model.currentPage = 1;
+                        }
                         $scope._model.filteredItems = null;
                         $scope._model.items = items;
                         $scope._model.refresh();
