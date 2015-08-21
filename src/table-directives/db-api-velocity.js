@@ -128,7 +128,7 @@
                                     r.push({
                                         fieldType: 'datetime',
                                         fieldOperator: 'lte',
-                                        fieldValue: moment(n[3]).utcOffset(0).format('MM/DD/YYYY HH:mm a'),
+                                        fieldValue: moment(n[3]).endOf('day').utcOffset(0).format('MM/DD/YYYY HH:mm a'),
                                         field: capitalize(item.key)
                                     });
                                 }
