@@ -1,7 +1,7 @@
 /*! 
  * sds-angular-controls
  * Angular Directives used with sds-angular generator
- * @version 0.4.9 
+ * @version 0.5.0 
  * 
  * Copyright (c) 2015 Steve Gentile, David Benson 
  * @link https://github.com/SMARTDATASYSTEMSLLC/sds-angular-controls 
@@ -1895,8 +1895,8 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
 (function () {
     'use strict';
 
-    // For internal use only. Manually binds a template using a provided template function, with a fallback to $compile.
-    // Needs to be extremely lightweight.
+    // For internal use. Manually binds a template using a provided template function, with a fallback to $compile.
+    // Needs to be lightweight.
 
     function dbBindCell ($compile) {
         return{
@@ -1905,7 +1905,8 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                 if (typeof $scope._col.template === 'function'){
                     $element.append($scope._col.template($scope));
 
-                }else if(!angular.element.trim($element.html())){
+                }else if(!$element.html().trim()){
+                    // template must be wrapped in a single tag
                     var html = angular.element('<span>' + $scope._col.template  + '</span>');
                     var compiled = $compile(html) ;
                     $element.append(html);
@@ -1917,24 +1918,12 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                   $element.addClass($scope._col.layoutCss);
                 }
             }
-        }
+        };
     }
     dbBindCell.$inject = ["$compile"];
 
-    function dbTransclude (){
-        return {
-            restrict: 'EAC',
-            link: function($scope, $element, $attrs, controller, $transclude) {
-                $transclude(function(clone, scope) {
-                    $element.empty();
-                    scope.$grid = $scope.$grid;
-                    $element.append(clone);
-                });
-            }
-        }
-    }
 
-    angular.module('sds-angular-controls').directive('dbBindCell', dbBindCell).directive('dbTransclude', dbTransclude)
+    angular.module('sds-angular-controls').directive('dbBindCell', dbBindCell);
 })();
 
 
@@ -1967,7 +1956,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     var templateFunc = null;
 
                     if (!templateText && $attrs.key){
-                        templateText = '{{' + dbGrid.rowName + '.' + $attrs.key + '}}'
+                        templateText = '{{' + dbGrid.rowName + '.' + $attrs.key + '}}';
                     }
                     if ($attrs.bind === 'true'){
                         templateFunc = templateText;
@@ -1993,7 +1982,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
 
                     if($attrs.query !== undefined){
                         $attrs.$observe('query', function (val, old){
-                           if(val != old){
+                           if(val !== old){
                                column.filter = val;
                                dbGrid.refresh();
                            }
@@ -2003,9 +1992,9 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     $scope.$on('$destroy', function() {
                         dbGrid.removeColumn(column);
                     });
-                }
+                };
             }
-        }
+        };
     }
     dbCol.$inject = ["$interpolate"];
 
@@ -2038,12 +2027,17 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
             templateUrl: 'sds-angular-controls/table-directives/db-grid.html',
             compile: function (tElement, tAttrs){
                 var loop = tAttrs.for.split(' ');
-                if (loop.length !== 1 && loop[1] != 'in') {
+                if (loop.length !== 1 && loop[1] !== 'in') {
                     $log.error('Invalid loop');
                     return;
                 }
 
-                tElement.find('tbody > tr').attr('ng-repeat', loop[0] + ' in _model.filteredItems');
+                tElement.find('tbody').children().attr('ng-repeat', loop[0] + ' in _model.filteredItems');
+
+                var click = tAttrs.rowClick;
+                if (click){
+                    tElement.find('tbody').children().attr('ng-click', click);
+                }
             },
             controller: ["$scope", "$element", "$attrs", function ($scope, $element, $attrs){
                 var complexFilter = $filter('complexFilter');
@@ -2069,6 +2063,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     getItems: defaultGetItems,
                     toggleSort: toggleSort,
                     clearFilters: clearFilters,
+                    getPages: getPages,
                     onEnter: onEnter,
                     refresh: _.debounce(refresh, 100),
                     waiting: false
@@ -2138,14 +2133,26 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                         return col.title;
                     }
                     if (col.type === 'bool'){
-                        return 'Filter using yes, no, true, or false'
+                        return 'Filter using yes, no, true, or false';
                     }else if (col.type){
-                        return 'Use a dash (-) to specify a range'
+                        return 'Use a dash (-) to specify a range';
                     }
                 }
 
-                function resetRefresh(){
-                    if ($scope.$grid.noResetRefreshFlag) {
+                function getPages(){
+
+                    var pages = [];
+                    for(var i = 1; i <= ($scope._model.total / $scope._model.pageSize) +1; i++){
+                        if (i > $scope._model.currentPage - 5 && i < $scope._model.currentPage + 5){
+                            pages.push(i);
+                        }
+                    }
+
+                    return pages;
+                }
+
+                function resetRefresh(resetPage){
+                    if ($scope.$grid.noResetRefreshFlag || resetPage === false) {
                         $scope.$grid.noResetRefreshFlag = false;
                     }
                     else {
@@ -2180,6 +2187,8 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
 
                     if (sort && sort === item.key && $scope._model.sort === null){
                         $scope._model.sort = $scope._model.cols.length;
+                    }else if ($scope._model.sort > item.index){
+                        $scope._model.sort += 1;
                     }
 
                     if (item.filter){
@@ -2192,6 +2201,10 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     var index = $scope._model.cols.indexOf(item);
                     if (index > -1) {
                         $scope._model.cols.splice(index, 1);
+
+                        if ($scope._model.sort >= index){
+                            $scope._model.sort -= 1;
+                        }
                     }
                 };
 
@@ -2223,7 +2236,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
 
                 if($attrs.query !== undefined){
                     $attrs.$observe('query', function (val, old){
-                        if(val != old){
+                        if(val !== old){
                             if (_.isString(val)){
                                 $scope._model.filterText = val;
                             }
@@ -2246,6 +2259,28 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
 })();
 
 (function () {
+    'use strict';
+
+    function dbTransclude (){
+        return {
+            restrict: 'EA',
+            link: function($scope, $element, $attrs, controller, $transclude) {
+                $transclude(function(clone, scope) {
+                    $element.empty();
+                    scope.$grid = $scope.$grid;
+                    $element.append(clone);
+                });
+            }
+        };
+    }
+
+    angular.module('sds-angular-controls').directive('dbTransclude', dbTransclude);
+})();
+
+(function () {
+    "use strict";
+
+    // Removes the control from the parent angular form.
 
     function isolateControl() {
         return {
@@ -2353,15 +2388,11 @@ angular.module('sds-angular-controls').run(['$templateCache', function($template
 
 
   $templateCache.put('sds-angular-controls/table-directives/db-grid.html',
-    "<div class=\"table-responsive\"> <div class=\"btn-toolbar\"> <a ng-if=\"_model.showAdvancedFilter\" href=\"\" class=\"btn btn-default\" ng-click=\"_model.clearFilters()\">Clear All Filters <span class=\"big-x\">&times;</span></a> <div ng-if=\"!_model.showAdvancedFilter && _model.filterType !== 'none'\" class=\"toolbar-input\"> <div class=\"form-group has-feedback\"> <input class=\"form-control\" type=\"text\" ng-model=\"_model.filterText\" ng-keyup=\"$grid.refresh()\" placeholder=\"Filter {{_model.label || 'items'}}\" on-enter=\"_model.onEnter()\" isolate-control> <a href=\"\" ng-click=\"_model.filterText = ''; $grid.refresh()\" class=\"form-control-feedback feedback-link\">&times;</a> </div> </div> <a href=\"\" ng-if=\"_model.filterType === 'advanced'\" class=\"btn btn-default\" ng-class=\"{'btn-primary': _model.showAdvancedFilter}\" ng-click=\"_model.showAdvancedFilter = !_model.showAdvancedFilter\">{{_model.showAdvancedFilter ? 'Simple' : 'Advanced'}} Filtering</a> <db-transclude></db-transclude> <p ng-if=\"_model.total && _model.label\"><i>{{_model.total}} {{_model.label}}</i></p> </div> <table class=\"table db-grid table-hover {{_model.layoutCss}}\"> <thead> <tr ng-if=\"_model.showAdvancedFilter\"> <th ng-repeat=\"_col in _model.cols\" ng-style=\"{width: _col.width}\" class=\"{{_col.layoutCss}}\"> <div ng-if=\"::_col.sortable\"> <input type=\"text\" class=\"form-control filter-input\" on-enter=\"_model.onEnter()\" ng-keyup=\"$grid.refresh()\" ng-model=\"_col.filter\" placeholder=\"Filter {{::_col.label || (_col.key | labelCase)}}\" tooltip=\"{{_model.getTooltip(_col)}}\" tooltip-trigger=\"focus\" tooltip-placement=\"top\" isolate-control> </div>   <tr> <th ng-repeat=\"_col in _model.cols\" ng-style=\"{width: _col.width}\" class=\"{{_col.layoutCss}}\"> <a href=\"\" ng-if=\"::_col.sortable\" ng-click=\"_model.toggleSort($index)\">{{::_col.label || (_col.key | labelCase) }}&nbsp;<i class=\"fa\" style=\"display: inline\" ng-class=\"{\r" +
-    "\n" +
-    "                         'fa-sort'     : _model.sort !== $index,\r" +
-    "\n" +
-    "                         'fa-sort-down': _model.sort === $index &&  _model.sortAsc,\r" +
-    "\n" +
-    "                         'fa-sort-up'  : _model.sort === $index && !_model.sortAsc\r" +
-    "\n" +
-    "                         }\"></i> </a> <span ng-if=\"::!_col.sortable\"> {{::_col.label || (_col.key | labelCase)}} </span>    <tbody ng-show=\"!_model.waiting\"> <tr> <td ng-repeat=\"_col in _model.cols\" db-bind-cell>   </table> <div ng-if=\"_model.filteredItems && _model.filteredItems.length === 0 && _model.label && !_model.waiting\" class=\"db-summary\"> No {{_model.label}}. </div> <pagination ng-if=\"_model.total > _model.pageSize && !_model.waiting\" total-items=\"_model.total\" items-per-page=\"_model.pageSize\" max-size=\"10\" rotate=\"false\" ng-model=\"_model.currentPage\" isolate-control></pagination> <div ng-show=\"_model.waiting\"> <i class=\"fa fa-circle-o-notch fa-spin\"></i> Please Wait... </div> </div>"
+    "<div class=\"table-responsive db-grid\"> <div class=\"btn-toolbar\"> <a ng-if=\"_model.showAdvancedFilter\" href=\"\" class=\"btn btn-default\" ng-click=\"_model.clearFilters()\">Clear All Filters <span class=\"big-x\">&times;</span></a> <div ng-if=\"!_model.showAdvancedFilter && _model.filterType !== 'none'\" class=\"toolbar-input\"> <div class=\"form-group has-feedback\"> <input class=\"form-control\" type=\"text\" ng-model=\"_model.filterText\" ng-keyup=\"$grid.refresh()\" placeholder=\"Filter {{_model.label || 'items'}}\" on-enter=\"_model.onEnter()\" isolate-control> <a href=\"\" ng-click=\"_model.filterText = ''; $grid.refresh()\" class=\"form-control-feedback feedback-link\">&times;</a> </div> </div> <a href=\"\" ng-if=\"_model.filterType === 'advanced'\" class=\"btn btn-default\" ng-class=\"{'btn-primary': _model.showAdvancedFilter}\" ng-click=\"_model.showAdvancedFilter = !_model.showAdvancedFilter\">{{_model.showAdvancedFilter ? 'Simple' : 'Advanced'}} Filtering</a> <db-transclude></db-transclude> <p ng-if=\"_model.total && _model.label\"><i>{{_model.total}} {{_model.label}}</i></p> </div> <table class=\"table db-grid table-hover {{_model.layoutCss}}\"> <thead> <tr ng-if=\"_model.showAdvancedFilter\"> <th ng-repeat=\"_col in _model.cols\" ng-style=\"{width: _col.width}\" class=\"{{_col.layoutCss}}\"> <div ng-if=\"::_col.sortable\"> <input type=\"text\" class=\"form-control filter-input\" on-enter=\"_model.onEnter()\" ng-keyup=\"$grid.refresh()\" ng-model=\"_col.filter\" placeholder=\"Filter {{::_col.label || (_col.key | labelCase)}}\" tooltip=\"{{_model.getTooltip(_col)}}\" tooltip-trigger=\"focus\" tooltip-placement=\"top\" isolate-control> </div>   <tr> <th ng-repeat=\"_col in _model.cols\" ng-style=\"{width: _col.width}\" class=\"{{_col.layoutCss}}\"> <a href=\"\" ng-if=\"::_col.sortable\" ng-click=\"_model.toggleSort($index)\">{{::_col.label || (_col.key | labelCase) }}&nbsp;<i class=\"fa\" style=\"display: inline\" ng-class=\"{\n" +
+    "                         'fa-sort'     : _model.sort !== $index,\n" +
+    "                         'fa-sort-down': _model.sort === $index &&  _model.sortAsc,\n" +
+    "                         'fa-sort-up'  : _model.sort === $index && !_model.sortAsc\n" +
+    "                         }\"></i> </a> <span ng-if=\"::!_col.sortable\"> {{::_col.label || (_col.key | labelCase)}} </span>    <tbody ng-show=\"!_model.waiting\"> <tr> <td ng-repeat=\"_col in _model.cols\" db-bind-cell>   </table> <div ng-if=\"_model.filteredItems && _model.filteredItems.length === 0 && _model.label && !_model.waiting\" class=\"db-summary\"> No {{_model.label}}. </div> <ul class=\"pagination\" ng-if=\"_model.total > _model.pageSize && !_model.waiting\"> <li ng-if=\"_model.currentPage > 1\"> <a href=\"\" aria-label=\"First\" ng-click=\"_model.currentPage = 1\"> <span aria-hidden=\"true\">First</span> </a> </li> <li class=\"disabled\" ng-if=\"_model.currentPage <= 1\"> <a href=\"\" aria-label=\"First\"> <span aria-hidden=\"true\">First</span> </a> </li> <li ng-if=\"_model.currentPage > 1\"> <a href=\"\" aria-label=\"Previous\" ng-click=\"_model.currentPage = _model.currentPage - 1\"> <span aria-hidden=\"true\">&lt;</span> </a> </li> <li class=\"disabled\" ng-if=\"_model.currentPage <= 1\"> <a href=\"\" aria-label=\"Previous\"> <span aria-hidden=\"true\">&lt;</span> </a> </li> <li ng-repeat=\"page in _model.getPages()\" ng-class=\"{active: page === _model.currentPage}\"> <a href=\"\" ng-click=\"_model.currentPage = page\">{{page}}</a> </li> <li ng-if=\"_model.currentPage < (_model.total / _model.pageSize)\"> <a href=\"\" aria-label=\"Next\" ng-click=\"_model.currentPage = _model.currentPage + 1\"> <span aria-hidden=\"true\">&gt;</span> </a> </li> <li class=\"disabled\" ng-if=\"_model.currentPage >= (_model.total / _model.pageSize)\"> <a href=\"\" aria-label=\"Next\" class=\"disabled\"> <span aria-hidden=\"true\">&gt;</span> </a> </li> <li ng-if=\"_model.currentPage < (_model.total / _model.pageSize)\"> <a href=\"\" aria-label=\"Last\" ng-click=\"_model.currentPage = 1 + (_model.total - (_model.total % _model.pageSize)) / _model.pageSize\"> <span aria-hidden=\"true\">Last ({{1 + (_model.total - (_model.total % _model.pageSize)) / _model.pageSize}})</span> </a> </li> <li class=\"disabled\" ng-if=\"_model.currentPage >= (_model.total / _model.pageSize)\"> <a href=\"\" aria-label=\"Last\" class=\"disabled\"> <span aria-hidden=\"true\">Last ({{1 + (_model.total - (_model.total % _model.pageSize)) / _model.pageSize}})</span> </a> </li> </ul> <div ng-show=\"_model.waiting\"> <i class=\"fa fa-circle-o-notch fa-spin\"></i> Please Wait... </div> </div>"
   );
 
 }]);

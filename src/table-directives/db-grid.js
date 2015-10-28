@@ -24,12 +24,17 @@
             templateUrl: 'sds-angular-controls/table-directives/db-grid.html',
             compile: function (tElement, tAttrs){
                 var loop = tAttrs.for.split(' ');
-                if (loop.length !== 1 && loop[1] != 'in') {
+                if (loop.length !== 1 && loop[1] !== 'in') {
                     $log.error('Invalid loop');
                     return;
                 }
 
-                tElement.find('tbody > tr').attr('ng-repeat', loop[0] + ' in _model.filteredItems');
+                tElement.find('tbody').children().attr('ng-repeat', loop[0] + ' in _model.filteredItems');
+
+                var click = tAttrs.rowClick;
+                if (click){
+                    tElement.find('tbody').children().attr('ng-click', click);
+                }
             },
             controller: function ($scope, $element, $attrs){
                 var complexFilter = $filter('complexFilter');
@@ -55,6 +60,7 @@
                     getItems: defaultGetItems,
                     toggleSort: toggleSort,
                     clearFilters: clearFilters,
+                    getPages: getPages,
                     onEnter: onEnter,
                     refresh: _.debounce(refresh, 100),
                     waiting: false
@@ -124,14 +130,26 @@
                         return col.title;
                     }
                     if (col.type === 'bool'){
-                        return 'Filter using yes, no, true, or false'
+                        return 'Filter using yes, no, true, or false';
                     }else if (col.type){
-                        return 'Use a dash (-) to specify a range'
+                        return 'Use a dash (-) to specify a range';
                     }
                 }
 
-                function resetRefresh(){
-                    if ($scope.$grid.noResetRefreshFlag) {
+                function getPages(){
+
+                    var pages = [];
+                    for(var i = 1; i <= ($scope._model.total / $scope._model.pageSize) +1; i++){
+                        if (i > $scope._model.currentPage - 5 && i < $scope._model.currentPage + 5){
+                            pages.push(i);
+                        }
+                    }
+
+                    return pages;
+                }
+
+                function resetRefresh(resetPage){
+                    if ($scope.$grid.noResetRefreshFlag || resetPage === false) {
                         $scope.$grid.noResetRefreshFlag = false;
                     }
                     else {
@@ -166,6 +184,8 @@
 
                     if (sort && sort === item.key && $scope._model.sort === null){
                         $scope._model.sort = $scope._model.cols.length;
+                    }else if ($scope._model.sort > item.index){
+                        $scope._model.sort += 1;
                     }
 
                     if (item.filter){
@@ -178,6 +198,10 @@
                     var index = $scope._model.cols.indexOf(item);
                     if (index > -1) {
                         $scope._model.cols.splice(index, 1);
+
+                        if ($scope._model.sort >= index){
+                            $scope._model.sort -= 1;
+                        }
                     }
                 };
 
@@ -209,7 +233,7 @@
 
                 if($attrs.query !== undefined){
                     $attrs.$observe('query', function (val, old){
-                        if(val != old){
+                        if(val !== old){
                             if (_.isString(val)){
                                 $scope._model.filterText = val;
                             }

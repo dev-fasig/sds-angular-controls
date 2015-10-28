@@ -1,4 +1,7 @@
 (function () {
+    "use strict";
+
+    // Removes the control from the parent angular form.
 
     function isolateControl() {
         return {
