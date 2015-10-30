@@ -1704,6 +1704,8 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                         }
                     });
 
+                    scope.query = query;
+
                     $rootScope.$broadcast('db-api:start', query);
                     dbGrid.setWaiting(true);
                     return $http.post(scope.api, query).then(function (response) {
