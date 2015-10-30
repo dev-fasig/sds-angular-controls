@@ -30,6 +30,7 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
+        ascii_only:true,
         banner: '<%= banner %>',
         sourceMap: 'dist/<%= pkg.name %>.map'
       },
