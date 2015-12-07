@@ -225,6 +225,10 @@
                     $scope._model.waiting = waiting;
                 };
 
+                this.setAdvanced = function (advanced){
+                    $scope._model.showAdvancedFilter = advanced;
+                };
+
                 this.refresh = function (force){
                     if ($scope._model.items || force){
                         resetRefresh();

@@ -55,6 +55,9 @@
                     if($attrs.query !== undefined){
                         $attrs.$observe('query', function (val, old){
                            if(val !== old){
+                               if (val) {
+                                   dbGrid.setAdvanced(true);
+                               }
                                column.filter = val;
                                dbGrid.refresh();
                            }
