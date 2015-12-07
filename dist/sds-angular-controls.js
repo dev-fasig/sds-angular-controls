@@ -1,7 +1,7 @@
 /*! 
  * sds-angular-controls
  * Angular Directives used with sds-angular generator
- * @version 0.5.1 
+ * @version 0.5.2 
  * 
  * Copyright (c) 2015 Steve Gentile, David Benson 
  * @link https://github.com/SMARTDATASYSTEMSLLC/sds-angular-controls 
@@ -1985,6 +1985,9 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     if($attrs.query !== undefined){
                         $attrs.$observe('query', function (val, old){
                            if(val !== old){
+                               if (val) {
+                                   dbGrid.setAdvanced(true);
+                               }
                                column.filter = val;
                                dbGrid.refresh();
                            }
@@ -2228,6 +2231,10 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
 
                 this.setWaiting = function (waiting){
                     $scope._model.waiting = waiting;
+                };
+
+                this.setAdvanced = function (advanced){
+                    $scope._model.showAdvancedFilter = advanced;
                 };
 
                 this.refresh = function (force){
