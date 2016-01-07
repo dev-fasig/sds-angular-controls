@@ -3,7 +3,7 @@
  * Angular Directives used with sds-angular generator
  * @version 0.5.2 
  * 
- * Copyright (c) 2015 Steve Gentile, David Benson 
+ * Copyright (c) 2016 Steve Gentile, David Benson 
  * @link https://github.com/SMARTDATASYSTEMSLLC/sds-angular-controls 
  * @license  MIT 
  */ 
@@ -2037,11 +2037,17 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     return;
                 }
 
-                tElement.find('tbody').children().attr('ng-repeat', loop[0] + ' in _model.filteredItems');
+                var row = tElement.find('tbody').children();
+                row.attr('ng-repeat', loop[0] + ' in _model.filteredItems');
 
                 var click = tAttrs.rowClick;
                 if (click){
-                    tElement.find('tbody').children().attr('ng-click', click);
+                   row.attr('ng-click', click);
+                }
+
+                var rowCss = tAttrs.rowCss;
+                if (rowCss){
+                    row.attr('ng-class', rowCss);
                 }
             },
             controller: ["$scope", "$element", "$attrs", function ($scope, $element, $attrs){

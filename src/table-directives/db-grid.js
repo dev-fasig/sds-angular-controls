@@ -29,11 +29,17 @@
                     return;
                 }
 
-                tElement.find('tbody').children().attr('ng-repeat', loop[0] + ' in _model.filteredItems');
+                var row = tElement.find('tbody').children();
+                row.attr('ng-repeat', loop[0] + ' in _model.filteredItems');
 
                 var click = tAttrs.rowClick;
                 if (click){
-                    tElement.find('tbody').children().attr('ng-click', click);
+                   row.attr('ng-click', click);
+                }
+
+                var rowCss = tAttrs.rowCss;
+                if (rowCss){
+                    row.attr('ng-class', rowCss);
                 }
             },
             controller: function ($scope, $element, $attrs){
