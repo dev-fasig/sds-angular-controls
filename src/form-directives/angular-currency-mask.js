@@ -19,7 +19,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                 if (addExtraZero && parts[1] && (parts[1].length === 1)) {
                     parts[1] = parts[1] + "0"
                 }
-                return (isNegative? '-' : '') +  parts.join(".");
+                return (isNegative? '-' : '') + '$' + parts.join(".");
             };
             var applyFormatting = function() {
                 var value = element.val();
