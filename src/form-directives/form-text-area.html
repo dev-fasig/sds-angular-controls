@@ -4,5 +4,7 @@
            name='{{::container.field}}'
            ng-required='container.isRequired'
            ng-disabled="container.isReadonly"
+              maxlength="{{maxlength || ''}}"
+              minlength="{{minlength || -1}}"
            style="{{::style}}"></textarea>
 </div>

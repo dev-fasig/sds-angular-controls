@@ -10,7 +10,9 @@
             require: '^formField',
             scope: {
                 style           : '@?',
-                layoutCss       : '@?' //default col-md-6
+                layoutCss       : '@?', //default col-md-6
+                maxlength       : '@?',
+                minlength       : '@?'
             },
             templateUrl: 'sds-angular-controls/form-directives/form-text-area.html',
             link: function (scope, element, attr, container) {

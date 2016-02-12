@@ -1152,7 +1152,9 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
             require: '^formField',
             scope: {
                 style           : '@?',
-                layoutCss       : '@?' //default col-md-6
+                layoutCss       : '@?', //default col-md-6
+                maxlength       : '@?',
+                minlength       : '@?'
             },
             templateUrl: 'sds-angular-controls/form-directives/form-text-area.html',
             link: function (scope, element, attr, container) {
@@ -2384,7 +2386,7 @@ angular.module('sds-angular-controls').run(['$templateCache', function($template
 
 
   $templateCache.put('sds-angular-controls/form-directives/form-text-area.html',
-    "<div class=\"{{::container.layout === 'horizontal' ? layoutCss : '' }}\"> <textarea class=\"form-control inputField {{::container.layout !== 'horizontal' ? layoutCss : ''}}\" ng-model=\"container.record[container.field]\" name=\"{{::container.field}}\" ng-required=\"container.isRequired\" ng-disabled=\"container.isReadonly\" style=\"{{::style}}\"></textarea> </div>"
+    "<div class=\"{{::container.layout === 'horizontal' ? layoutCss : '' }}\"> <textarea class=\"form-control inputField {{::container.layout !== 'horizontal' ? layoutCss : ''}}\" ng-model=\"container.record[container.field]\" name=\"{{::container.field}}\" ng-required=\"container.isRequired\" ng-disabled=\"container.isReadonly\" maxlength=\"{{maxlength || ''}}\" minlength=\"{{minlength || -1}}\" style=\"{{::style}}\"></textarea> </div>"
   );
 
 
