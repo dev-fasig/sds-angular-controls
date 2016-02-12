@@ -229,8 +229,11 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                 if (parts[1] && parts[1].length > 2) {
                     parts[1] = parts[1].substring(0, 2);
                 }
+                console.log(parts[1]);
                 if (addExtraZero && parts[1] && (parts[1].length === 1)) {
                     parts[1] = parts[1] + "0"
+                }else if (addExtraZero && !parts[1]){
+                    parts[1] = '00';
                 }
                 return (isNegative? '-' : '') + '$' + parts.join(".");
             };
@@ -238,7 +241,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                 var value = element.val();
                 var original = value;
                 if (!value || value.length == 0) { return }
-                value = numberWithCommas(value);
+                value = numberWithCommas(value, true);
                 if (value != original) {
                     element.val(value);
                     element.triggerHandler('input')
