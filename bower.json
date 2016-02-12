@@ -48,7 +48,8 @@
     "jquery.maskedinput": "digitalBush/jquery.maskedinput#>=1.4.0",
     "jquery": "~2",
     "moment": "~2",
-    "selectize": "~0.11"
+    "selectize": "~0.11",
+    "angular-currency-mask": "~0.1.0-alpha"
   },
   "resolutions": {
     "angular": "~1.3",
