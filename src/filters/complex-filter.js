@@ -61,7 +61,7 @@
                             key: col.key,
                             type: col.type
                         });
-                    }else if (col.type === 'bool' && col.filter){
+                    }else if ((col.type === 'boolean' || col.type === 'bool') && col.filter){
                         var b = col.filter.toLowerCase();
                         if (b === 'no'.substr(0, b.length) || b === 'false'.substr(0, b.length)){
                             b = false;

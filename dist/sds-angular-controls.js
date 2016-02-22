@@ -77,7 +77,7 @@ angular.module('sds-angular-controls', ['ui.bootstrap', 'toggle-switch', 'ngSani
                             key: col.key,
                             type: col.type
                         });
-                    }else if (col.type === 'bool' && col.filter){
+                    }else if ((col.type === 'boolean' || col.type === 'bool') && col.filter){
                         var b = col.filter.toLowerCase();
                         if (b === 'no'.substr(0, b.length) || b === 'false'.substr(0, b.length)){
                             b = false;
@@ -1756,7 +1756,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                                     });
                                 }
                             }else if (item.key && item.filter && item.type === 'date' && item.filter[item.filter.length-1] === '-'){
-                                n = item.filter.slice(-1);
+                                n = item.filter.slice(0, -1);
                                 if (dateRegex.test(n) && moment(n).isValid()) {
                                     r.push({
                                         fieldType: 'datetime',
