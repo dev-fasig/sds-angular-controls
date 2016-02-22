@@ -1755,6 +1755,16 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                                         field: capitalize(item.key)
                                     });
                                 }
+                            }else if (item.key && item.filter && item.type === 'date' && item.filter[item.filter.length-1] === '-'){
+                                n = item.filter.slice(-1);
+                                if (dateRegex.test(n) && moment(n).isValid()) {
+                                    r.push({
+                                        fieldType: 'datetime',
+                                        fieldOperator: 'gt',
+                                        fieldValue: moment(n).utcOffset(0).format('MM/DD/YYYY HH:mm a'),
+                                        field: capitalize(item.key)
+                                    });
+                                }
                             }else if (item.key && item.filter && item.type === 'number' && item.filter.indexOf('-') > 0){
                                 n = item.filter.split('-');
                                 if(!n[0] && n[1]){
@@ -1803,6 +1813,15 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                                         fieldType: 'decimal',
                                         fieldOperator: 'eq',
                                         fieldValue: parseFloat(item.filter),
+                                        field: capitalize(item.key)
+                                    });
+                                }
+                            }else if (item.key && item.filter && item.type === 'boolean'){
+                                if (/^0|(false)|(no)|n|f$/i.test(filter) || /^[1-9]\d*|(true)|(yes)|y|t$/i.test(item.filter)) {
+                                    r.push({
+                                        fieldType: 'boolean',
+                                        fieldOperator: 'eq',
+                                        fieldValue: /^[1-9]\d*|(true)|(yes)|y|t$/i.test(item.filter),
                                         field: capitalize(item.key)
                                     });
                                 }
@@ -1855,7 +1874,16 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                                         field: capitalize(item.key)
                                     });
                                 }
-                            }else if (item.key && item.sortable && item.type === 'date'){
+                            }else if (item.key && item.sortable && item.type === 'boolean'){
+                                if (/^0|(false)|(no)|n|f$/i.test(filter) || /^1|(true)|(yes)|y|t$/i.test(filter)) {
+                                    r.push({
+                                        fieldType: 'boolean',
+                                        fieldOperator: 'eq',
+                                        fieldValue: /^1|(true)|(yes)|y|t$/i.test(filter),
+                                        field: capitalize(item.key)
+                                    });
+                                }
+                        }else if (item.key && item.sortable && item.type === 'date'){
                                 if (dateRegex.test(filter) && moment(filter).isValid()) {
                                     r.push({
                                         fieldType: 'date',
