@@ -247,19 +247,10 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     element.triggerHandler('input')
                 }
             };
-            element.bind('keyup', function(e) {
-                var keycode = e.keyCode;
-                var isTextInputKey =
-                    (keycode > 47 && keycode < 58)   || // number keys
-                    keycode == 32 || keycode == 8    || // spacebar or backspace
-                    (keycode > 64 && keycode < 91)   || // letter keys
-                    (keycode > 95 && keycode < 112)  || // numpad keys
-                    (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
-                    (keycode > 218 && keycode < 223);   // [\]' (in order)
-                if (isTextInputKey) {
-                    applyFormatting();
-                }
-            });
+            element.bind('keypress', function(e) {
+                var verified = (e.which == 8 || e.which == undefined || e.which == 0) ? null : String.fromCharCode(e.which).match(/[^$,.0-9]/);
+                if (verified) {e.preventDefault();}
+            }).bind('blur', applyFormatting);
             ngModelController.$parsers.push(function(value) {
                 if (!value || value.length == 0) {
                     return value;
