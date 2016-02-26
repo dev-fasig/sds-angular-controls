@@ -16,13 +16,13 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                 if (parts[1] && parts[1].length > 2) {
                     parts[1] = parts[1].substring(0, 2);
                 }
-                console.log(parts[1]);
+
                 if (addExtraZero && parts[1] && (parts[1].length === 1)) {
                     parts[1] = parts[1] + "0"
                 }else if (addExtraZero && !parts[1]){
                     parts[1] = '00';
                 }
-                return (isNegative? '-' : '') + '$' + parts.join(".");
+                return (isNegative? '-' : '') + '$' + parts[0] + '.' + parts[1];
             };
             var applyFormatting = function() {
                 var value = element.val();
@@ -35,7 +35,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                 }
             };
             element.bind('keypress', function(e) {
-                var verified = (e.which == 8 || e.which == undefined || e.which == 0) ? null : String.fromCharCode(e.which).match(/[^$,.0-9]/);
+                var verified = (e.which == 8 || e.which == undefined || e.which == 0) ? null : String.fromCharCode(e.which).match(/[^$,-.0-9]/);
                 if (verified) {e.preventDefault();}
             }).bind('blur', applyFormatting);
             ngModelController.$parsers.push(function(value) {
