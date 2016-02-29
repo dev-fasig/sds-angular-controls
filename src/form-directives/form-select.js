@@ -51,13 +51,7 @@
                         if (scope.container.record && scope.container.record[scope.container.field]) {
 
                             var value = scope.innerItems[scope.container.record[scope.container.field]];
-                            //if using itemKey/itemValue -we need to find it in the array vs. hash:
-                            if(scope.itemValue && scope.itemKey){
-                                var arrayItem = _.find(scope.innerItems, function(item){
-                                   return item[scope.itemKey] === scope.container.record[scope.container.field];
-                                });
-                                value = arrayItem[scope.itemValue];
-                            }
+
                             scope.readOnlyModel = value;
                         }
                     }
