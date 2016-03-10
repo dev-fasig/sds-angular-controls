@@ -8,9 +8,9 @@
     function dbBindCell ($compile) {
         return{
             restrict: 'A',
-            link: function ($scope, $element) {
+            link: function ($scope, $element, $sanitize) {
                 if (typeof $scope._col.template === 'function'){
-                    $element.append($scope._col.template($scope));
+                    $element.append($sanitize($scope._col.template($scope)));
 
                 }else if(!$element.html().trim()){
                     // template must be wrapped in a single tag
