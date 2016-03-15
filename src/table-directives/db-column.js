@@ -28,11 +28,12 @@
                     var templateFunc = null;
 
                     if (!templateText && $attrs.key){
-                        templateText = '{{' + dbGrid.rowName + '.' + $attrs.key + '}}';
+                        templateText = '{{' + dbGrid.rowName + '.' + $attrs.key + ' | sanitize}}';
                     }
                     if ($attrs.bind === 'true'){
                         templateFunc = templateText;
                     }else{
+                        templateText = templateText.replace(/}}/g, ' | sanitize}}');
                         templateFunc = $interpolate(templateText);
                     }
 

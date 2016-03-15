@@ -205,6 +205,23 @@ angular.module('sds-angular-controls', ['ui.bootstrap', 'toggle-switch', 'ngSani
 (function (){
     'use strict';
 
+    function sanitize ($sanitize){
+        return function (input) {
+
+            if (input === null || input === undefined || input === ''){
+                input = ' ';
+            }
+            return $sanitize(input);
+        };
+    }
+    sanitize.$inject = ["$sanitize"];
+
+    angular.module('sds-angular-controls').filter('sanitize', sanitize);
+})();
+
+(function (){
+    'use strict';
+
     function unsafe ($sce) { return $sce.trustAsHtml; }
     unsafe.$inject = ["$sce"];
 
@@ -1920,35 +1937,11 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
     // Needs to be lightweight.
 
     function dbBindCell ($compile, $parse) {
-        function getInputs(obj, $scope, safeScope){
-            if (obj && obj.sharedGetter){
-                var  val = obj($scope);
-                if (typeof val === "string"){
-                    val = document.createElement('div').appendChild(document.createTextNode(val)).parentNode.innerHTML;
-                }
-                obj.assign(safeScope, val);
-
-            }else if(obj.inputs) {
-                _.forOwn(obj.inputs, function (child) {
-                    if (child) {
-                        getInputs(child, $scope, safeScope)
-                    }
-                })
-            }
-
-            return safeScope;
-        }
-
         return{
             restrict: 'A',
             link: function ($scope, $element) {
                 if (typeof $scope._col.template === 'function'){
-                    var safeScope = {};
-                    _.each($scope._col.template.expressions, function (key){
-                        getInputs($parse(key), $scope, safeScope);
-                    });
-
-                    $element.append($scope._col.template(safeScope));
+                    $element.append($scope._col.template($scope));
                 }else if(!$element.html().trim()){
                     // template must be wrapped in a single tag
                     var html = angular.element('<span>' + $scope._col.template  + '</span>');
@@ -2001,11 +1994,12 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     var templateFunc = null;
 
                     if (!templateText && $attrs.key){
-                        templateText = '{{' + dbGrid.rowName + '.' + $attrs.key + '}}';
+                        templateText = '{{' + dbGrid.rowName + '.' + $attrs.key + ' | sanitize}}';
                     }
                     if ($attrs.bind === 'true'){
                         templateFunc = templateText;
                     }else{
+                        templateText = templateText.replace(/}}/g, ' | sanitize}}');
                         templateFunc = $interpolate(templateText);
                     }
 
