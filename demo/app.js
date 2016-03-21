@@ -49,6 +49,16 @@
       {continent: 'North America'}
     ];
 
+    vm.ages = [
+      {"key":1,"value":"2", order: 1},
+      {"key":2,"value":"3", order: 2},
+      {"key":3,"value":"3+", order: 3},
+      {"key":4,"value":"4+", order: 4},
+      {"key":7,"value":"3,4", order: 5},
+      {"key":5,"value":"3,4,5", order: 6},
+      {"key":6,"value":"3,4,5,6", order:7}
+    ];
+
     vm.itemList = [];
 
     vm.save = function(testFrm){

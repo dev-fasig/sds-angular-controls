@@ -85,6 +85,14 @@
               <form-toggle log="true" on-label="Yes" off-label="No"></form-toggle>
           </form-field>
 
+          <form-field label="Age Condition for a horse (with sort)" record="vm.testForm" field="ageCondition">
+              <form-multi-select items="vm.ages" item-key="key" item-value="value" sort-field="order"></form-multi-select>
+          </form-field>
+
+          <form-field label="Age Condition for a horse (no sort)" record="vm.testForm" field="ageCondition">
+              <form-multi-select items="vm.ages" item-key="key" item-value="value"></form-multi-select>
+          </form-field>
+
           <input type="submit" value="Submit" class="btn btn-primary"ß>
       </form>
 

@@ -15,6 +15,7 @@
                 itemValue       : '@?',
                 itemGroupKey    : '@?',
                 itemGroupValue  : '@?',
+                sortField          : '@?',
                 allowCustom     : '=?',
                 style           : '@?',
                 layoutCss       : '@?' //default col-md-6
@@ -62,6 +63,10 @@
                     searchField: [scope.itemValue],
                     maxOptions: 10
                 };
+
+                if(scope.sortField) {
+                    options.sortField = scope.sortField;
+                }
 
                 if (scope.allowCustom){
                     options.persist = false;
