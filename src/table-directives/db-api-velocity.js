@@ -153,10 +153,10 @@
                                         field: capitalize(item.key)
                                     });
                                 }
-                            }else if (item.key && item.filter && item.type === 'boolean'){
+                            }else if (item.key && item.filter && item.type === 'bool'){
                                 if (/^0|(false)|(no)|n|f$/i.test(filter) || /^[1-9]\d*|(true)|(yes)|y|t$/i.test(item.filter)) {
                                     r.push({
-                                        fieldType: 'boolean',
+                                        fieldType: 'bool',
                                         fieldOperator: 'eq',
                                         fieldValue: /^[1-9]\d*|(true)|(yes)|y|t$/i.test(item.filter),
                                         field: capitalize(item.key)
@@ -211,10 +211,10 @@
                                         field: capitalize(item.key)
                                     });
                                 }
-                            }else if (item.key && item.sortable && item.type === 'boolean'){
+                            }else if (item.key && item.sortable && item.type === 'bool'){
                                 if (/^0|(false)|(no)|n|f$/i.test(filter) || /^1|(true)|(yes)|y|t$/i.test(filter)) {
                                     r.push({
-                                        fieldType: 'boolean',
+                                        fieldType: 'bool',
                                         fieldOperator: 'eq',
                                         fieldValue: /^1|(true)|(yes)|y|t$/i.test(filter),
                                         field: capitalize(item.key)
