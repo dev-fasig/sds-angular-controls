@@ -6,7 +6,7 @@
            ng-if="type !== 'number'"
            ng-required='container.isRequired'
            ng-disabled='container.isReadonly'
-           placeholder='{{placeholder || container.label}}'
+           placeholder='{{container.isReadonly ? "" : placeholder || container.label}}'
            style="{{::style}}"
            mask-input="{{mask}}"
            maxlength="{{maxlength || ''}}"
@@ -19,7 +19,7 @@
            ng-if="type === 'number'"
            ng-required='container.isRequired'
            ng-disabled='container.isReadonly'
-           placeholder='{{placeholder || container.label}}'
+           placeholder='{{container.isReadonly ? "" : placeholder || container.label}}'
            min="{{::min}}"
            max="{{::max}}"
            step="{{::step}}"
