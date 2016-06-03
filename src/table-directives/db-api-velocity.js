@@ -154,7 +154,7 @@
                                     });
                                 }
                             }else if (item.key && item.filter && item.type === 'bool'){
-                                if (/^0|(false)|(no)|n|f$/i.test(filter) || /^[1-9]\d*|(true)|(yes)|y|t$/i.test(item.filter)) {
+                                if (/^0|(false)|(no)|n|f$/i.test(item.filter) || /^[1-9]\d*|(true)|(yes)|y|t$/i.test(item.filter)) {
                                     r.push({
                                         fieldType: 'bool',
                                         fieldOperator: 'eq',
