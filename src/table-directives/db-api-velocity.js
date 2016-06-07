@@ -161,6 +161,13 @@
                                         fieldValue: /^[1-9]\d*|(true)|(yes)|y|t$/i.test(item.filter),
                                         field: capitalize(item.key)
                                     });
+                                }else if (item.filter.toLowerCase() === item.trueFilter || item.filter.toLowerCase() === item.falseFilter.toLowerCase()){
+                                    r.push({
+                                        fieldType: 'bool',
+                                        fieldOperator: 'eq',
+                                        fieldValue: item.filter.toLowerCase() === item.trueFilter.toLowerCase(),
+                                        field: capitalize(item.key)
+                                    });
                                 }
                             }else if (item.key && item.filter && item.type === 'date'){
                                 if (moment(item.filter).isValid()) {
@@ -217,6 +224,13 @@
                                         fieldType: 'bool',
                                         fieldOperator: 'eq',
                                         fieldValue: /^1|(true)|(yes)|y|t$/i.test(filter),
+                                        field: capitalize(item.key)
+                                    });
+                                }else if (filter && (filter.toLowerCase() === item.trueFilter || filter.toLowerCase() === item.falseFilter)){
+                                    r.push({
+                                        fieldType: 'bool',
+                                        fieldOperator: 'eq',
+                                        fieldValue: filter.toLowerCase() === item.trueFilter,
                                         field: capitalize(item.key)
                                     });
                                 }

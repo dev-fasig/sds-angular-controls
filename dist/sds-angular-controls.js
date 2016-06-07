@@ -79,7 +79,7 @@ angular.module('sds-angular-controls', ['ui.bootstrap', 'toggle-switch', 'ngSani
                         });
                     }else if ((col.type === 'boolean' || col.type === 'bool') && col.filter){
                         var b = col.filter.toLowerCase();
-                        if (b === 'no'.substr(0, b.length) || b === 'false'.substr(0, b.length)){
+                        if (b === 'no'.substr(0, b.length) || b === 'false'.substr(0, b.length) || b === col.falseFilter.substr(0, b.length)){
                             b = false;
                         }
                         filters.push({
@@ -1831,6 +1831,13 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                                         fieldValue: /^[1-9]\d*|(true)|(yes)|y|t$/i.test(item.filter),
                                         field: capitalize(item.key)
                                     });
+                                }else if (item.filter.toLowerCase() === item.trueFilter || item.filter.toLowerCase() === item.falseFilter.toLowerCase()){
+                                    r.push({
+                                        fieldType: 'bool',
+                                        fieldOperator: 'eq',
+                                        fieldValue: item.filter.toLowerCase() === item.trueFilter.toLowerCase(),
+                                        field: capitalize(item.key)
+                                    });
                                 }
                             }else if (item.key && item.filter && item.type === 'date'){
                                 if (moment(item.filter).isValid()) {
@@ -1887,6 +1894,13 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                                         fieldType: 'bool',
                                         fieldOperator: 'eq',
                                         fieldValue: /^1|(true)|(yes)|y|t$/i.test(filter),
+                                        field: capitalize(item.key)
+                                    });
+                                }else if (filter && (filter.toLowerCase() === item.trueFilter || filter.toLowerCase() === item.falseFilter)){
+                                    r.push({
+                                        fieldType: 'bool',
+                                        fieldOperator: 'eq',
+                                        fieldValue: filter.toLowerCase() === item.trueFilter,
                                         field: capitalize(item.key)
                                     });
                                 }
@@ -2013,6 +2027,8 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                         filter: $attrs.query,
                         width: $attrs.width,
                         layoutCss: $attrs.layoutCss,
+                        falseFilter: $attrs.falseFilter,
+                        trueFilter: $attrs.trueFilter,
                         key: $attrs.key,
                         label: $attrs.label,
                         sortable:  $attrs.sortable === 'false' ? false : !!$attrs.key,
@@ -2185,7 +2201,9 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     if (col.title){
                         return col.title;
                     }
-                    if (col.type === 'bool'){
+                    if (col.type === 'bool'   && col.trueFilter          && col.falseFilter) {
+                        return 'Filter using ' + col.trueFilter + ' and ' + col.falseFilter;
+                    }else if (col.type === 'bool'){
                         return 'Filter using yes, no, true, or false';
                     }else if (col.type){
                         return 'Use a dash (-) to specify a range';

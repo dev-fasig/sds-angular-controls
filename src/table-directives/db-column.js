@@ -42,6 +42,8 @@
                         filter: $attrs.query,
                         width: $attrs.width,
                         layoutCss: $attrs.layoutCss,
+                        falseFilter: $attrs.falseFilter,
+                        trueFilter: $attrs.trueFilter,
                         key: $attrs.key,
                         label: $attrs.label,
                         sortable:  $attrs.sortable === 'false' ? false : !!$attrs.key,

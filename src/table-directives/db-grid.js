@@ -135,7 +135,9 @@
                     if (col.title){
                         return col.title;
                     }
-                    if (col.type === 'bool'){
+                    if (col.type === 'bool'   && col.trueFilter          && col.falseFilter) {
+                        return 'Filter using ' + col.trueFilter + ' and ' + col.falseFilter;
+                    }else if (col.type === 'bool'){
                         return 'Filter using yes, no, true, or false';
                     }else if (col.type){
                         return 'Use a dash (-) to specify a range';
