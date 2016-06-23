@@ -7,6 +7,7 @@
             replace: true,
             scope: {
                 dateFormat       : '@',
+                modelOptions     : '=?',
                 max              : '=?',
                 min              : '=?',
                 style            : '@?',

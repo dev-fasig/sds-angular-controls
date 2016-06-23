@@ -10,7 +10,7 @@
             replace: true,
             scope: {
                 dateFormat       : '@',
-                modelOptions     : '=',
+                modelOptions     : '=?',
                 max              : '=?',
                 min              : '=?',
                 style            : '@?',
