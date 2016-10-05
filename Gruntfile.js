@@ -92,7 +92,8 @@ module.exports = function(grunt) {
         eqnull: true,
         globals: {
           jQuery: true
-        }
+        },
+          reporterOutput: ""
       },
       gruntfile: {
         src: 'Gruntfile.js'

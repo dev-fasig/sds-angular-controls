@@ -52,7 +52,7 @@
                 scope.$watch("container.isReadonly", function(newVal){
                     if(newVal) {
                         if(scope.container.record[scope.container.field]) {
-                            scope.readOnlyModel = moment.utc(scope.container.record[scope.container.field]).format(scope.dateFormat.toUpperCase());
+                            scope.readOnlyModel = moment(scope.container.record[scope.container.field]).format(scope.dateFormat.toUpperCase());
                         }
                     }
                 });
