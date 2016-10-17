@@ -40,16 +40,16 @@
                     } else if (col.type === 'number' && col.filter) {
                         var n = col.filter.split("-");
                         if (!n[0] && n[1]) {
-                            console.log(n);
+
                             n.shift();
                             n[0] *= -1;
-                            console.log(n);
+
                         }
                         if (!n[1] && n[2]) {
-                            console.log(n);
+
                             n.splice(1, 1);
                             n[1] *= -1;
-                            console.log(n);
+
                         }
                         if (n[1] === ""){
                             n[1] =  Number.MAX_VALUE;
@@ -63,7 +63,7 @@
                         });
                     }else if ((col.type === 'boolean' || col.type === 'bool') && col.filter){
                         var b = col.filter.toLowerCase();
-                        if (b === 'no'.substr(0, b.length) || b === 'false'.substr(0, b.length) || b === col.falseFilter.substr(0, b.length)){
+                        if (b === 'no'.substr(0, b.length) || b === 'false'.substr(0, b.length) || (col.falseFilter && b === col.falseFilter.substr(0, b.length))){
                             b = false;
                         }
                         filters.push({
