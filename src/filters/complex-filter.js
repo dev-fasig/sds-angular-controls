@@ -62,15 +62,21 @@
                             type: col.type
                         });
                     }else if ((col.type === 'boolean' || col.type === 'bool') && col.filter){
-                        var b = col.filter.toLowerCase();
-                        if (b === 'no'.substr(0, b.length) || b === 'false'.substr(0, b.length) || (col.falseFilter && b === col.falseFilter.substr(0, b.length))){
-                            b = false;
+
+                        if (/^0|(false)|(no)|n|f$/i.test(col.filter) || /^[1-9]\d*|(true)|(yes)|y|t$/i.test(col.filter)) {
+                            filters.push({
+                                filter: /^[1-9]\d*|(true)|(yes)|y|t$/i.test(col.filter),
+                                key: col.key,
+                                type: col.type
+                            });
+                        }else if (col.trueFilter && col.falseFilter && col.filter.toLowerCase() === col.trueFilter || col.filter.toLowerCase() === col.falseFilter.toLowerCase()){
+                            filters.push({
+                                filter: col.filter.toLowerCase() === col.trueFilter.toLowerCase(),
+                                key: col.key,
+                                type: col.type
+                            });
                         }
-                        filters.push({
-                            filter: !!b,
-                            key: col.key,
-                            type: col.type
-                        });
+
                     }else if (col.filter && typeof col.filter === 'string'){
                         filters.push({
                             filter:col.filter.toLowerCase(),

@@ -124,7 +124,7 @@
                 }
 
                 function onEnter(){
-                    if ($scope._model.items.length === 1){
+                    if ($scope._model.items && $scope._model.items.length === 1){
                         $timeout(function (){
                             $element.find('tbody tr a:first').click();
                         });
