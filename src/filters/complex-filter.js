@@ -63,9 +63,9 @@
                         });
                     }else if ((col.type === 'boolean' || col.type === 'bool') && col.filter){
 
-                        if (/^0|(false)|(no)|n|f$/i.test(col.filter) || /^[1-9]\d*|(true)|(yes)|y|t$/i.test(col.filter)) {
+                        if (/^(0|(false)|(no)|n|f)$/i.test(col.filter) || /^([1-9]\d*|(true)|(yes)|y|t)$/i.test(col.filter)) {
                             filters.push({
-                                filter: /^[1-9]\d*|(true)|(yes)|y|t$/i.test(col.filter),
+                                filter: /^([1-9]\d*|(true)|(yes)|y|t)$/i.test(col.filter),
                                 key: col.key,
                                 type: col.type
                             });
