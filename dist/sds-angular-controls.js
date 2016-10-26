@@ -1897,11 +1897,11 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                                     });
                                 }
                             }else if (item.key && item.sortable && item.type === 'bool'){
-                                if (/^0|(false)|(no)|n|f$/i.test(filter) || /^1|(true)|(yes)|y|t$/i.test(filter)) {
+                                if (/^(0|(false)|(no)|n|f)$/i.test(filter) || /^(1|(true)|(yes)|y|t)$/i.test(filter)) {
                                     r.push({
                                         fieldType: 'bool',
                                         fieldOperator: 'eq',
-                                        fieldValue: /^1|(true)|(yes)|y|t$/i.test(filter),
+                                        fieldValue: /^(1|(true)|(yes)|y|t)$/i.test(filter),
                                         field: capitalize(item.key)
                                     });
                                 }else if (item.falseFilter && item.trueFilter && filter && (filter.toLowerCase() === item.trueFilter || filter.toLowerCase() === item.falseFilter)){
