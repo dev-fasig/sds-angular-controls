@@ -53,7 +53,7 @@ angular.module('sds-angular-controls', ['ui.bootstrap', 'toggle-switch', 'ngSani
                                 type: col.type
                             });
                         }
-                    } else if (col.type === 'number' && col.filter) {
+                    } else if ((col.type === 'number' || col.type === 'int') && col.filter) {
                         var n = col.filter.split("-");
                         if (!n[0] && n[1]) {
 
@@ -1706,6 +1706,10 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                    return (obj - parseFloat( obj ) + 1) >= 0;
                 }
 
+                function isInt (obj){
+                    return (obj - parseInt( obj )) === 0;
+                }
+
                 function getData(filter, sortKey, sortAsc, currentPage, pageSize, cols){
                     var query = {
                         page: currentPage+1,
@@ -1831,6 +1835,15 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                                         field: capitalize(item.key)
                                     });
                                 }
+                            }else if (item.key && item.filter && item.type === 'int'){
+                                if (isInt(item.filter)) {
+                                    r.push({
+                                        fieldType: 'int',
+                                        fieldOperator: 'eq',
+                                        fieldValue: parseInt(item.filter),
+                                        field: capitalize(item.key)
+                                    });
+                                }
                             }else if (item.key && item.filter && item.type === 'bool'){
                                 if (/^(0|(false)|(no)|n|f)$/i.test(item.filter) || /^([1-9]\d*|(true)|(yes)|y|t)$/i.test(item.filter)) {
                                     r.push({
@@ -1893,6 +1906,15 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                                         fieldType: 'decimal',
                                         fieldOperator: 'eq',
                                         fieldValue: parseFloat(filter),
+                                        field: capitalize(item.key)
+                                    });
+                                }
+                            }else if (item.key && item.sortable && item.type === 'int'){
+                                if (isInt(filter)) {
+                                    r.push({
+                                        fieldType: 'int',
+                                        fieldOperator: 'eq',
+                                        fieldValue: parseInt(filter),
                                         field: capitalize(item.key)
                                     });
                                 }

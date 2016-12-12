@@ -37,7 +37,7 @@
                                 type: col.type
                             });
                         }
-                    } else if (col.type === 'number' && col.filter) {
+                    } else if ((col.type === 'number' || col.type === 'int') && col.filter) {
                         var n = col.filter.split("-");
                         if (!n[0] && n[1]) {
 

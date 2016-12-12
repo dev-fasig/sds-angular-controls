@@ -28,6 +28,10 @@
                    return (obj - parseFloat( obj ) + 1) >= 0;
                 }
 
+                function isInt (obj){
+                    return (obj - parseInt( obj )) === 0;
+                }
+
                 function getData(filter, sortKey, sortAsc, currentPage, pageSize, cols){
                     var query = {
                         page: currentPage+1,
@@ -153,6 +157,15 @@
                                         field: capitalize(item.key)
                                     });
                                 }
+                            }else if (item.key && item.filter && item.type === 'int'){
+                                if (isInt(item.filter)) {
+                                    r.push({
+                                        fieldType: 'int',
+                                        fieldOperator: 'eq',
+                                        fieldValue: parseInt(item.filter),
+                                        field: capitalize(item.key)
+                                    });
+                                }
                             }else if (item.key && item.filter && item.type === 'bool'){
                                 if (/^(0|(false)|(no)|n|f)$/i.test(item.filter) || /^([1-9]\d*|(true)|(yes)|y|t)$/i.test(item.filter)) {
                                     r.push({
@@ -215,6 +228,15 @@
                                         fieldType: 'decimal',
                                         fieldOperator: 'eq',
                                         fieldValue: parseFloat(filter),
+                                        field: capitalize(item.key)
+                                    });
+                                }
+                            }else if (item.key && item.sortable && item.type === 'int'){
+                                if (isInt(filter)) {
+                                    r.push({
+                                        fieldType: 'int',
+                                        fieldOperator: 'eq',
+                                        fieldValue: parseInt(filter),
                                         field: capitalize(item.key)
                                     });
                                 }
