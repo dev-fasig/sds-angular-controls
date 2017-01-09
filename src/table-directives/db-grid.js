@@ -51,6 +51,7 @@
                     isApi: false,
                     label: $attrs.label,
                     layoutCss: $attrs.layoutCss,
+                    paging: $attrs.paging,
                     currentPage: 1,
                     total: 0,
                     sortAsc: $attrs.sort ? $attrs.sort[0] !== '-' : true,
