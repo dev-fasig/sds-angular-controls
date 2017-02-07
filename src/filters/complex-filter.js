@@ -87,13 +87,13 @@
 
                 // run query
                 return _.filter(input, function (item) {
-                    return _.all(filters, function (col) {
+                    return _.every(filters, function (col) {
                         if (!col.key) {
                             return true;
                         } else if (!col.type && _.isObject(prop(item,col.key))) {
-                            return _.any(prop(item,col.key), function (v){
+                            return _.some(prop(item,col.key), function (v){
                                 if (_.isPlainObject(v)){
-                                    return _.any(v, function (vv){
+                                    return _.some(v, function (vv){
                                         return (vv + "").toLowerCase().indexOf(col.filter) > -1;
                                     });
                                 }else{

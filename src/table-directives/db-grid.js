@@ -68,6 +68,7 @@
                     toggleSort: toggleSort,
                     clearFilters: clearFilters,
                     getPages: getPages,
+                    setPage: setPage,
                     onEnter: onEnter,
                     refresh: _.debounce(refresh, 100),
                     waiting: false
@@ -115,13 +116,21 @@
                     }else{
                         $scope._model.sort = index;
                     }
+                    saveState();
                 }
 
                 function clearFilters(){
                     _.each($scope._model.cols, function (item){
                        item.filter = '';
                     });
+                    saveState();
                     $scope._model.refresh();
+                }
+
+                function setPage (page){
+                    $scope._model.currentPage = page;
+                    saveState();
+                    refresh();
                 }
 
                 function onEnter(){
@@ -171,18 +180,48 @@
                 }
 
                 function refresh() {
-                    //$timeout(function () {
-                        $scope._model.getItems(
-                            $scope._model.showAdvancedFilter ? $scope._model.cols : $scope._model.filterText,
-                            $scope._model.sort !== null ? $scope._model.cols[$scope._model.sort].key : null,
-                            $scope._model.sortAsc,
-                            $scope._model.currentPage - 1,
-                            $scope._model.pageSize,
-                            $scope._model.cols
-                        ).then(function (result){
-                            $scope._model.filteredItems = result;
-                        });
-                    //});
+                    $scope._model.getItems(
+                        $scope._model.showAdvancedFilter ? $scope._model.cols : $scope._model.filterText,
+                        $scope._model.sort !== null ? $scope._model.cols[$scope._model.sort].key : null,
+                        $scope._model.sortAsc,
+                        $scope._model.currentPage - 1,
+                        $scope._model.pageSize,
+                        $scope._model.cols
+                    ).then(function (result){
+                        $scope._model.filteredItems = result;
+                    });
+                }
+
+                function saveState(){
+                    if ($scope._model.savePlace){
+                        window.sessionStorage.setItem($scope.$id, JSON.stringify({
+                            filterText: $scope._model.filterText,
+                            showAdvancedFilter: $scope._model.showAdvancedFilter,
+                            sort: $scope._model.sort,
+                            sortAsc: $scope._model.sortAsc,
+                            currentPage: $scope._model.currentPage,
+                            filters: $scope._model.cols.map(function (v){ return v.filter; })
+                        }));
+                    }
+                }
+
+                function loadState(){
+                    if ($scope._model.savePlace){
+                        var saved = JSON.parse(window.sessionStorage.getItem($scope.$id));
+                        if (saved && saved.currentPage) {
+                            $scope._model.filterText = saved.filterText;
+                            $scope._model.showAdvancedFilter = saved.showAdvancedFilter;
+                            $scope._model.sort = saved.sort;
+                            $scope._model.sortAsc = saved.sortAsc;
+                            $scope._model.currentPage = saved.currentPage;
+
+                            angular.forEach(saved.filters, function (v, i){
+                                $scope._model.cols[i].filter = v;
+                            });
+                        }
+
+
+                    }
                 }
 
                 this.addColumn = function (item){
