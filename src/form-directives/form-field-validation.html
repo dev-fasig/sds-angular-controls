@@ -1,5 +1,5 @@
-<div ng-if="!hideValidationMessage" class='has-error' ng-show='showError({{field}})'
-     ng-messages='{{field}}.$error'>
+<div ng-if="!hideValidationMessage" class='has-error' ng-show='showError(this[field])'
+     ng-messages='this[field].$error'>
     <span class='control-label' ng-message='required'> {{ validationFieldName }} is required. </span>
     <span class='control-label' ng-message='text'> {{ validationFieldName }} should be text. </span>
     <span class='control-label' ng-message='integer'> {{ validationFieldName }} should be an integer. </span>
