@@ -136,7 +136,7 @@
 
                 scope.options = options;
             }
-        }
+        };
     }
 
     angular.module('sds-angular-controls').directive('formAutocomplete', formAutocomplete);

@@ -8,9 +8,9 @@
             restrict: 'A',
             require: ['ngModel', '^?form'],
             link: function (scope, elm, attrs, ctrls) {
-                // Do a copy of the controller
-                var ctrlCopy = {};
-                angular.copy(ctrls[0], ctrlCopy);
+                //// Do a copy of the controller
+                //var ctrlCopy = {};
+                //angular.copy(ctrls[0], ctrlCopy);
 
                 if (ctrls[1]) {
                     ctrls[1].$removeControl(ctrls[0]);

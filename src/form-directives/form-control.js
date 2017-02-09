@@ -23,14 +23,14 @@
                         formField.$scope.max = attr.max;
                     }
 
-                    var name = attr.name || attr.ngModel.substr(attr.ngModel.lastIndexOf('.')+1);;
+                    var name = attr.name || attr.ngModel.substr(attr.ngModel.lastIndexOf('.')+1);
                     formField.$scope.field = name;
 
-                }
+                };
             }
-        }
+        };
     }
 
-    angular.module('sds-angular-controls').directive('formControl', formControl)
+    angular.module('sds-angular-controls').directive('formControl', formControl);
 
 })();

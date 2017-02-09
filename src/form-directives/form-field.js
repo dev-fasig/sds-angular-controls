@@ -71,10 +71,9 @@
                     catch(err){
                         return false;
                     }
-                }
+                };
             }
-
-        }
+        };
     }
 
     angular.module('sds-angular-controls').directive('formField', formField);

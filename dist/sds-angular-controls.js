@@ -490,7 +490,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
 
                 scope.options = options;
             }
-        }
+        };
     }
     formAutocomplete.$inject = ["$timeout"];
 
@@ -523,13 +523,13 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     }, function (){
                         $scope.isDisabled = '';
                     });
-                }
+                };
             }
-        }
+        };
     }
     formButton.$inject = ["$q"];
 
-    angular.module('sds-angular-controls').directive('formButton', formButton)
+    angular.module('sds-angular-controls').directive('formButton', formButton);
 
 })();
 
@@ -558,16 +558,16 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                         formField.$scope.max = attr.max;
                     }
 
-                    var name = attr.name || attr.ngModel.substr(attr.ngModel.lastIndexOf('.')+1);;
+                    var name = attr.name || attr.ngModel.substr(attr.ngModel.lastIndexOf('.')+1);
                     formField.$scope.field = name;
 
-                }
+                };
             }
-        }
+        };
     }
     formControl.$inject = ["$timeout"];
 
-    angular.module('sds-angular-controls').directive('formControl', formControl)
+    angular.module('sds-angular-controls').directive('formControl', formControl);
 
 })();
 
@@ -868,10 +868,9 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
                     catch(err){
                         return false;
                     }
-                }
+                };
             }
-
-        }
+        };
     }
     formField.$inject = ["$filter", "$timeout"];
 
@@ -2432,9 +2431,9 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
             restrict: 'A',
             require: ['ngModel', '^?form'],
             link: function (scope, elm, attrs, ctrls) {
-                // Do a copy of the controller
-                var ctrlCopy = {};
-                angular.copy(ctrls[0], ctrlCopy);
+                //// Do a copy of the controller
+                //var ctrlCopy = {};
+                //angular.copy(ctrls[0], ctrlCopy);
 
                 if (ctrls[1]) {
                     ctrls[1].$removeControl(ctrls[0]);
@@ -2464,6 +2463,7 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
 
     angular.module('sds-angular-controls').directive('isolateControl', isolateControl);
 })();
+
 angular.module('sds-angular-controls').run(['$templateCache', function($templateCache) {
   'use strict';
 
