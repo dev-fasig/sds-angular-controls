@@ -25,18 +25,7 @@
     "tests"
   ],
   "devDependencies": {},
-  "overrides": {
-    "jquery.maskedinput": {
-      "dependencies": {
-        "jquery": ">=1.8.3"
-      }
-    },
-    "angular-bootstrap": {
-      "dependencies": {
-        "angular": "~1.8"
-      }
-    }
-  },
+  "overrides": {},
   "dependencies": {
     "angular": "~1",
     "angular-toggle-switch": "https://github.com/SMARTDATASYSTEMSLLC/angular-toggle-switch.git#84521e882bd431881d85032d0e40fca58f6e729e",
@@ -49,9 +38,5 @@
     "jquery": "~2",
     "moment": "~2",
     "selectize": "~0.11"
-  },
-  "resolutions": {
-    "angular": "~1.5.8",
-    "jquery": "~2"
   }
 }

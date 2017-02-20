@@ -42,11 +42,19 @@
                 });
                 //end include
 
+                var format = function (input){
+                    if (input === null || input === undefined || input === ''){
+                        input = ' ';
+                    }
+                    input = (input + '').replace(/([A-Z])/g, ' $1');
+                    return input[0].toUpperCase() + input.slice(1);
+                };
+
                 if(!$scope.label){
-                    $scope.label = $filter("labelCase")($scope.field);
+                    $scope.label = format($scope.field);
                 }
 
-                $scope.validationFieldName = $scope.validationFieldName || $filter("labelCase")($scope.label);
+                $scope.validationFieldName = $scope.validationFieldName || format($scope.label);
                 $scope.showLabel = $scope.showLabel !== false; // default to true
                 $scope.hideValidationMessage = $scope.hideValidationMessage || false;
                 $scope.layoutCss = $scope.layoutCss || "col-md-12";
@@ -78,3 +86,5 @@
 
     angular.module('sds-angular-controls').directive('formField', formField);
 })();
+
+

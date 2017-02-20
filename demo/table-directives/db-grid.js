@@ -182,7 +182,7 @@
                 function refresh() {
                     $scope._model.getItems(
                         $scope._model.showAdvancedFilter ? $scope._model.cols : $scope._model.filterText,
-                        $scope._model.sort !== null ? $scope._model.cols[$scope._model.sort].key : null,
+                        $scope._model.sort === null ? null : $scope._model.cols[$scope._model.sort].key,
                         $scope._model.sortAsc,
                         $scope._model.currentPage - 1,
                         $scope._model.pageSize,
