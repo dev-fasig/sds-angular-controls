@@ -5,7 +5,7 @@
                placeholder="{{placeholder || container.label}}"
                ng-model="container.record[container.field]"
                ng-model-options="modelOptions || {}"
-               ng-required="::container.isRequired"
+               ng-required="container.isRequired"
                min-date="min"
                max-date="max"
                datepicker-popup="{{::dateFormat}}"
