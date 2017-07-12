@@ -3,7 +3,7 @@
            ng-model='container.record[container.field]'
            name='{{::container.field}}'
            type='{{::type}}'
-           ng-if="type !== 'number'"
+           ng-if="type !== 'number' && type !== 'password'"
            ng-required='container.isRequired'
            ng-disabled='container.isReadonly'
            placeholder='{{container.isReadonly ? "" : placeholder || container.label}}'
@@ -12,6 +12,20 @@
            maxlength="{{maxlength || ''}}"
            minlength="{{minlength || -1}}"
         />
+    <input class="form-control inputField {{::container.layout !== 'horizontal' ? layoutCss : ''}}"
+           ng-model='container.record[container.field]'
+           name='{{::container.field}}'
+           type='password'
+           autocomplete="off"
+           ng-if="type === 'password'"
+           ng-required='container.isRequired'
+           ng-disabled='container.isReadonly'
+           placeholder='{{container.isReadonly ? "" : placeholder || container.label}}'
+           style="{{::style}}"
+           mask-input="{{mask}}"
+           maxlength="{{maxlength || ''}}"
+           minlength="{{minlength || -1}}"
+    />
     <input class="form-control inputField {{::container.layout !== 'horizontal' ? layoutCss : ''}}"
            ng-model='container.record[container.field]'
            name='{{::container.field}}'
